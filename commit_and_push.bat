@@ -4,19 +4,23 @@ cd /D "%~dp0"
 cd ..
 
 
-git init
 git add .
 touch .gitignore
 git rm --cached batches
 
 git config --global user.name "LAB"
 git config --global user.email "COMPUTER@LAB"
-git commit -m "init commit"&cls
+git commit -m "%date%"&cls
 
-gh auth login -p https -w
+git push origin main&cls
+if %errorlevel% equ 0 (
+  goto END
+) else (
+  goto MASTER
+)
 
-git remote rm origin
-gh repo create --source=%CD% --private --push&cls
+:MASTER
+git push origin master&cls
 if %errorlevel% equ 0 (
   goto END
 ) else (
@@ -29,7 +33,6 @@ pause
 exit
 
 :ALTERNATIVEEND
-for %%f in ("%CD%") do set myfolder=%%~nxf
-echo You already have a GitHub repo named %myfolder%. Please delete it/change your folder name.
+echo Couldn't push to remote repo.
 pause
 exit
